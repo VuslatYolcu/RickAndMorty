@@ -12,6 +12,7 @@ protocol RMCharacterListViewViewModelDelegate: AnyObject {
     func didSelectCharacter(_ character: RMCharacter)
 }
 
+/// View model to handle character list view logic
 final class RMCharacterListViewViewModel: NSObject {
     
     public weak var delegate: RMCharacterListViewViewModelDelegate?
@@ -31,11 +32,15 @@ final class RMCharacterListViewViewModel: NSObject {
     
     private var cellViewModels: [RMCharacterCollectionViewCellViewModel] = []
     
+    private var appInfo: RMGetAllCharactersResponse.Info? = nil
+    
+    /// Fetch initial set of characters (20)
     public func fetchCharacters() {
         RMService.shared.execute(.listCharactersRequest, expecting: RMGetAllCharactersResponse.self) { [weak self] result in
             switch result {
             case .success(let responseModel):
                 let results = responseModel.results
+                self?.appInfo = responseModel.info
                 self?.characters = results
                 DispatchQueue.main.async {
                     self?.delegate?.didLoadInitialCharacters()
@@ -45,7 +50,20 @@ final class RMCharacterListViewViewModel: NSObject {
             }
         }
     }
+    
+    /// Paginate if additional characters are needed
+    public func fetchAdditionalCharacters() {
+        // Fetch characters
+    }
+    
+    public var shouldShowLoadMoreIndicator: Bool {
+        return appInfo?.next != nil
+    }
+    
+    
 }
+
+// MARK: - CollectionView
 
 extension RMCharacterListViewViewModel: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -77,5 +95,14 @@ extension RMCharacterListViewViewModel: UICollectionViewDelegate {
         collectionView.deselectItem(at: indexPath, animated: true)
         let character = characters[indexPath.row]
         delegate?.didSelectCharacter(character)
+    }
+}
+
+// MARK: - Scroll View
+extension RMCharacterListViewViewModel: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard shouldShowLoadMoreIndicator else {
+            return
+        }
     }
 }
