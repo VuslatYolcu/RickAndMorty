@@ -9,6 +9,7 @@ import UIKit
 
 protocol RMCharacterListViewViewModelDelegate: AnyObject {
     func didLoadInitialCharacters()
+    func didLoadMoreCharacters(with newIndexPaths: [IndexPath])
     func didSelectCharacter(_ character: RMCharacter)
 }
 
@@ -27,7 +28,9 @@ final class RMCharacterListViewViewModel: NSObject {
                     characterStatus: character.status,
                     characterImageUrl: URL(string: character.image)
                 )
-                cellViewModels.append(viewModel)
+                if !cellViewModels.contains(viewModel) {
+                    cellViewModels.append(viewModel)
+                }
             }
         }
     }
@@ -54,9 +57,50 @@ final class RMCharacterListViewViewModel: NSObject {
     }
     
     /// Paginate if additional characters are needed
-    public func fetchAdditionalCharacters() {
-        // Fetch characters
+    public func fetchAdditionalCharacters(url: URL) {
+        guard !isLoadingMoreCharacters else {
+            return
+        }
+        
         isLoadingMoreCharacters = true
+        print("Fetching more characters")
+        guard let request = RMRequest(url: url) else {
+            isLoadingMoreCharacters = false
+            print("Failed to create request")
+            return
+        }
+        
+        RMService.shared.execute(request, expecting: RMGetAllCharactersResponse.self) { [weak self] result in
+            guard let strongSelf = self else {
+                return
+            }
+            switch result {
+            case .success(let responseModel):
+                strongSelf.setAdditionalCharacters(responseModel: responseModel)
+            case .failure(let failure):
+                print(String(describing: failure))
+                strongSelf.isLoadingMoreCharacters = false
+            }
+        }
+    }
+    
+    private func setAdditionalCharacters(responseModel: RMGetAllCharactersResponse) {
+        let moreResults = responseModel.results
+        appInfo = responseModel.info
+        
+        let originalCount = characters.count
+        let newCount = moreResults.count
+        let total = originalCount + newCount
+        let startingIndex = total - newCount
+        let indexPathToAdd: [IndexPath] = Array(startingIndex..<(startingIndex + newCount)).compactMap({
+            return IndexPath(row: $0, section: 0)
+        })
+        print(indexPathToAdd)
+        characters.append(contentsOf: moreResults)
+        DispatchQueue.main.async {
+            self.delegate?.didLoadMoreCharacters(with: indexPathToAdd)
+        }
+        self.isLoadingMoreCharacters = false
     }
     
     public var shouldShowLoadMoreIndicator: Bool {
@@ -120,15 +164,22 @@ extension RMCharacterListViewViewModel: UICollectionViewDelegate {
 extension RMCharacterListViewViewModel: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
-        guard shouldShowLoadMoreIndicator, !isLoadingMoreCharacters else {
-            return
-        }
-        let offset = scrollView.contentOffset.y
-        let totalContentHeight = scrollView.contentSize.height
-        let totalScrollViewFixedHeight = scrollView.frame.size.height
-        
-        if offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-            fetchAdditionalCharacters()
+        guard shouldShowLoadMoreIndicator,
+              !isLoadingMoreCharacters,
+              !cellViewModels.isEmpty,
+              let nextUrlString = appInfo?.next,
+              let url = URL(string: nextUrlString) else {
+                  return
+              }
+        Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { [weak self] t in
+            let offset = scrollView.contentOffset.y
+            let totalContentHeight = scrollView.contentSize.height
+            let totalScrollViewFixedHeight = scrollView.frame.size.height
+            
+            if offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
+                self?.fetchAdditionalCharacters(url: url)
+            }
+            t.invalidate()
         }
     }
 }
