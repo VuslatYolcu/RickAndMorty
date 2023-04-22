@@ -135,9 +135,8 @@
 		115D184529EB0A4F00FFE586 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				11C7500B29EDB6C9007FD0A9 /* RMCharacterListView.swift */,
-				11E8E5A129EDC76D00CC6930 /* RMCharacterCollectionViewCell.swift */,
-				11DCB4AE29EF055600352FE5 /* RMCharacterDetailView.swift */,
+				11B3193529F45F62009CCE43 /* CharacterDetails */,
+				11B3193629F45F81009CCE43 /* Character */,
 				11DCB4B229EF0C6600352FE5 /* RMFooterLoadingCollectionReusableView.swift */,
 			);
 			path = Views;
@@ -192,6 +191,23 @@
 				115D185729EB0BEF00FFE586 /* RMSettingsViewController.swift */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		11B3193529F45F62009CCE43 /* CharacterDetails */ = {
+			isa = PBXGroup;
+			children = (
+				11DCB4AE29EF055600352FE5 /* RMCharacterDetailView.swift */,
+			);
+			path = CharacterDetails;
+			sourceTree = "<group>";
+		};
+		11B3193629F45F81009CCE43 /* Character */ = {
+			isa = PBXGroup;
+			children = (
+				11C7500B29EDB6C9007FD0A9 /* RMCharacterListView.swift */,
+				11E8E5A129EDC76D00CC6930 /* RMCharacterCollectionViewCell.swift */,
+			);
+			path = Character;
 			sourceTree = "<group>";
 		};
 		11C7500529EDAC3B007FD0A9 /* DataTypes */ = {
