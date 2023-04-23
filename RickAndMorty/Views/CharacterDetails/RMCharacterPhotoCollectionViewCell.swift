@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
+final class RMCharacterPhotoCollectionViewCell: UICollectionViewCell {
     static let cellIdentifier = "RMCharacterPhotoCollectionViewCell"
     
     private let imageView: UIImageView = {

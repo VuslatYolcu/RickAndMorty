@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
+final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
     static let cellIdentifier = "RMCharacterEpisodeCollectionViewCell"
     
     override init(frame: CGRect) {
