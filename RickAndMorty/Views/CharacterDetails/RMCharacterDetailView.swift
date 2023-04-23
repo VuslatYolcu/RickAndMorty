@@ -8,7 +8,7 @@
 import UIKit
 
 /// View for single character info
-class RMCharacterDetailView: UIView {
+final class RMCharacterDetailView: UIView {
 
     public var collectionView: UICollectionView?
     
