@@ -14,7 +14,7 @@ final class RMEpisodeDetailViewController: UIViewController {
     
     // MARK: - Init
     init(url: URL?) {
-        self.viewModel = .init(url: url)
+        self.viewModel = .init(endpointUrl: url)
         super.init(nibName: nil, bundle: nil)
     }
     
