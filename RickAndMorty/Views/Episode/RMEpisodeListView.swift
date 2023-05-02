@@ -8,7 +8,7 @@
 import UIKit
 
 protocol RMEpisodeListViewDelegate: AnyObject {
-    func rmEpisodeListView(_ episodeListView: RMEpisodeListView, didSelectEpisode episode: RMCharacter)
+    func rmEpisodeListView(_ episodeListView: RMEpisodeListView, didSelectEpisode episode: RMEpisode)
 }
 
 /// View that handles showing list of episodes, loader. etc.
@@ -33,7 +33,7 @@ class RMEpisodeListView: UIView {
         collectionView.isHidden = true
         collectionView.alpha = 0
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(RMCharacterCollectionViewCell.self, forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier)
+        collectionView.register(RMEpisodeCollectionViewCell.self, forCellWithReuseIdentifier: RMEpisodeCollectionViewCell.cellIdentifier)
         collectionView.register(RMFooterLoadingCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier)
         return collectionView
     }()
@@ -49,7 +49,7 @@ class RMEpisodeListView: UIView {
          
         spinner.startAnimating()
         viewModel.delegate = self
-        viewModel.fetchCharacters()
+        viewModel.fetchEpisodes()
         setUpCollectionView()
     }
 
@@ -80,18 +80,18 @@ class RMEpisodeListView: UIView {
 }
 
 extension RMEpisodeListView: RMEpisodeListViewViewModelDelegate {
-    func didLoadMoreCharacters(with newIndexPaths: [IndexPath]) {
+    func didLoadMoreEpisodes(with newIndexPaths: [IndexPath]) {
         spinner.stopAnimating()
         collectionView.performBatchUpdates {
             self.collectionView.insertItems(at: newIndexPaths)
         }
     }
     
-    func didSelectCharacter(_ character: RMCharacter) {
-        delegate?.rmCharacterListView(self, didSelectCharacter: character)
+    func didSelectEpisode(_ episode: RMEpisode) {
+        delegate?.rmEpisodeListView(self, didSelectEpisode: episode)
     }
     
-    func didLoadInitialCharacters() {
+    func didLoadInitialEpisodes() {
         
         spinner.stopAnimating()
         collectionView.isHidden = false

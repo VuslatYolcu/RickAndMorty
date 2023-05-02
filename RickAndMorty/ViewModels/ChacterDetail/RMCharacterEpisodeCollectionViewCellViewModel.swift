@@ -1,5 +1,5 @@
 //
-//  RMCharacterEpisodeCollectionViewCellViewModel.swift
+//  RMEpisodeCollectionViewCellViewModel.swift
 //  RickAndMorty
 //
 //  Created by Vuslat Yolcu on 22.04.2023.
@@ -13,7 +13,7 @@ protocol RMEpisodeDataRender {
     var air_date: String { get }
 }
 
-final class RMCharacterEpisodeCollectionViewCellViewModel {
+final class RMEpisodeCollectionViewCellViewModel: Hashable, Equatable {
     
     private let episodeDataUrl: URL?
     private var isFetching: Bool = false
@@ -60,5 +60,13 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
                 print(String(describing: error))
             }
         }
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.episodeDataUrl?.absoluteString ?? "")
+    }
+    
+    static func == (lhs: RMEpisodeCollectionViewCellViewModel, rhs: RMEpisodeCollectionViewCellViewModel) -> Bool {
+        return lhs.hashValue == rhs.hashValue
     }
 }

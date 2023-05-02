@@ -10,7 +10,7 @@ import UIKit
 protocol RMEpisodeListViewViewModelDelegate: AnyObject {
     func didLoadInitialEpisodes()
     func didLoadMoreEpisodes(with newIndexPaths: [IndexPath])
-    func didSelectEpisode(_ character: RMEpisode)
+    func didSelectEpisode(_ episode: RMEpisode)
 }
 
 /// View model to handle episode list view logic
@@ -23,11 +23,9 @@ final class RMEpisodeListViewViewModel: NSObject {
     private var episodes: [RMEpisode] = [] {
         didSet {
             for episode in episodes {
-//                let viewModel = RMEpisodeCollectionViewCellViewModel(
-//                    characterName: character.name,
-//                    characterStatus: character.status,
-//                    characterImageUrl: URL(string: character.image)
-//                )
+                let viewModel = RMEpisodeCollectionViewCellViewModel(
+                    episodeDataUrl: URL(string: episode.url)
+                )
                 if !cellViewModels.contains(viewModel) {
                     cellViewModels.append(viewModel)
                 }
@@ -35,20 +33,20 @@ final class RMEpisodeListViewViewModel: NSObject {
         }
     }
     
-    private var cellViewModels: [RMCharacterEpisodeCollectionViewCellViewModel] = []
+    private var cellViewModels: [RMEpisodeCollectionViewCellViewModel] = []
     
-    private var appInfo: RMGetAllCharactersResponse.Info? = nil
+    private var appInfo: RMGetAllEpisodesResponse.Info? = nil
     
-    /// Fetch initial set of characters (20)
-    public func fetchCharacters() {
-        RMService.shared.execute(.listCharactersRequest, expecting: RMGetAllCharactersResponse.self) { [weak self] result in
+    /// Fetch initial set of episodes (20)
+    public func fetchEpisodes() {
+        RMService.shared.execute(.listEpisodesRequest, expecting: RMGetAllEpisodesResponse.self) { [weak self] result in
             switch result {
             case .success(let responseModel):
                 let results = responseModel.results
                 self?.appInfo = responseModel.info
-                self?.characters = results
+                self?.episodes = results
                 DispatchQueue.main.async {
-                    self?.delegate?.didLoadInitialCharacters()
+                    self?.delegate?.didLoadInitialEpisodes()
                 }
             case .failure(let error):
                 print(String(describing: error))
@@ -56,21 +54,21 @@ final class RMEpisodeListViewViewModel: NSObject {
         }
     }
     
-    /// Paginate if additional characters are needed
-    public func fetchAdditionalCharacters(url: URL) {
+    /// Paginate if additional episodes are needed
+    public func fetchAdditionalEpisodes(url: URL) {
         guard !isLoadingMoreCharacters else {
             return
         }
         
         isLoadingMoreCharacters = true
-        print("Fetching more characters")
+        print("Fetching more episodes")
         guard let request = RMRequest(url: url) else {
             isLoadingMoreCharacters = false
             print("Failed to create request")
             return
         }
         
-        RMService.shared.execute(request, expecting: RMGetAllCharactersResponse.self) { [weak self] result in
+        RMService.shared.execute(request, expecting: RMGetAllEpisodesResponse.self) { [weak self] result in
             guard let strongSelf = self else {
                 return
             }
@@ -84,11 +82,11 @@ final class RMEpisodeListViewViewModel: NSObject {
         }
     }
     
-    private func setAdditionalCharacters(responseModel: RMGetAllCharactersResponse) {
+    private func setAdditionalCharacters(responseModel: RMGetAllEpisodesResponse) {
         let moreResults = responseModel.results
         appInfo = responseModel.info
         
-        let originalCount = characters.count
+        let originalCount = episodes.count
         let newCount = moreResults.count
         let total = originalCount + newCount
         let startingIndex = total - newCount
@@ -96,9 +94,9 @@ final class RMEpisodeListViewViewModel: NSObject {
             return IndexPath(row: $0, section: 0)
         })
         print(indexPathToAdd)
-        characters.append(contentsOf: moreResults)
+        episodes.append(contentsOf: moreResults)
         DispatchQueue.main.async {
-            self.delegate?.didLoadMoreCharacters(with: indexPathToAdd)
+            self.delegate?.didLoadMoreEpisodes(with: indexPathToAdd)
         }
         self.isLoadingMoreCharacters = false
     }
@@ -148,15 +146,15 @@ extension RMEpisodeListViewViewModel: UICollectionViewDelegateFlowLayout {
         let bounds = UIScreen.main.bounds
         let width = (bounds.width - 30) / 2
         
-        return CGSize(width: width, height: width * 1.5 )
+        return CGSize(width: width, height: width * 0.8 )
     }
 }
 
 extension RMEpisodeListViewViewModel: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        let character = characters[indexPath.row]
-        delegate?.didSelectCharacter(character)
+        let selection = episodes[indexPath.row]
+        delegate?.didSelectEpisode(selection)
     }
 }
 
@@ -177,7 +175,7 @@ extension RMEpisodeListViewViewModel: UIScrollViewDelegate {
             let totalScrollViewFixedHeight = scrollView.frame.size.height
             
             if offset >= (totalContentHeight - totalScrollViewFixedHeight - 120) {
-                self?.fetchAdditionalCharacters(url: url)
+                self?.fetchAdditionalEpisodes(url: url)
             }
             t.invalidate()
         }
