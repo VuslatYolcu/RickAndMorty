@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		110B02402A0289D000250635 /* RMSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110B023F2A0289D000250635 /* RMSearchViewController.swift */; };
 		1112BFA32A019A8B0027D226 /* RMEpisodeListViewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1112BFA22A019A8B0027D226 /* RMEpisodeListViewViewModel.swift */; };
 		1112BFA52A019FE00027D226 /* RMGetAllEpisodesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1112BFA42A019FE00027D226 /* RMGetAllEpisodesResponse.swift */; };
 		1130EF5429F5BB5E004DD9C0 /* RMEpisodeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1130EF5329F5BB5E004DD9C0 /* RMEpisodeDetailViewController.swift */; };
@@ -53,6 +54,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		110B023F2A0289D000250635 /* RMSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMSearchViewController.swift; sourceTree = "<group>"; };
 		1112BFA22A019A8B0027D226 /* RMEpisodeListViewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMEpisodeListViewViewModel.swift; sourceTree = "<group>"; };
 		1112BFA42A019FE00027D226 /* RMGetAllEpisodesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMGetAllEpisodesResponse.swift; sourceTree = "<group>"; };
 		1130EF5329F5BB5E004DD9C0 /* RMEpisodeDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RMEpisodeDetailViewController.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 			children = (
 				11DCB4AC29EF04AE00352FE5 /* RMCharacterDetailViewController.swift */,
 				1130EF5329F5BB5E004DD9C0 /* RMEpisodeDetailViewController.swift */,
+				110B023F2A0289D000250635 /* RMSearchViewController.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -371,6 +374,7 @@
 				11EF646029EBFEFC00AFAE39 /* RMOrigin.swift in Sources */,
 				11DCB4B129EF057100352FE5 /* RMCharacterDetailViewViewModel.swift in Sources */,
 				11EF646229EBFF6900AFAE39 /* RMSingleLocation.swift in Sources */,
+				110B02402A0289D000250635 /* RMSearchViewController.swift in Sources */,
 				11C7500C29EDB6C9007FD0A9 /* RMCharacterListView.swift in Sources */,
 				11C7500829EDAC78007FD0A9 /* RMGetAllCharactersResponse.swift in Sources */,
 				11EF646429EC00FA00AFAE39 /* RMCharacterStatus.swift in Sources */,
