@@ -1,5 +1,5 @@
 //
-//  RMCharacterEpisodeCollectionViewCell.swift
+//  RMEpisodeCollectionViewCell.swift
 //  RickAndMorty
 //
 //  Created by Vuslat Yolcu on 22.04.2023.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
-    static let cellIdentifier = "RMCharacterEpisodeCollectionViewCell"
+final class RMEpisodeCollectionViewCell: UICollectionViewCell {
+    static let cellIdentifier = "RMEpisodeCollectionViewCell"
     
     private let seasonLabel: UILabel = {
         let label = UILabel()
@@ -48,7 +48,6 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
     private func setupLayer() {
         contentView.layer.cornerRadius = 8
         contentView.layer.borderWidth = 2
-        contentView.layer.borderColor = UIColor.systemBlue.cgColor
     }
     
     private func setUpConstraints() {
@@ -81,7 +80,7 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
         airDateLabel.text = nil
     }
     
-    public func configure(with viewModel: RMCharacterEpisodeCollectionViewCellViewModel) {
+    public func configure(with viewModel: RMEpisodeCollectionViewCellViewModel) {
         viewModel.registerForData { [weak self] data in
             // Main queue
             self?.nameLabel.text = data.name
@@ -89,5 +88,6 @@ final class RMCharacterEpisodeCollectionViewCell: UICollectionViewCell {
             self?.airDateLabel.text = "Aired on " + data.air_date
         }
         viewModel.fetchEpisode()
+        contentView.layer.borderColor = viewModel.borderColor.cgColor
     }
 }

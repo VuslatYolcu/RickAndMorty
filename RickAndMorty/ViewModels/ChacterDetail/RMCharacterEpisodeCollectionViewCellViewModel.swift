@@ -1,11 +1,12 @@
 //
-//  RMCharacterEpisodeCollectionViewCellViewModel.swift
+//  RMEpisodeCollectionViewCellViewModel.swift
 //  RickAndMorty
 //
 //  Created by Vuslat Yolcu on 22.04.2023.
 //
 
 import Foundation
+import UIKit
 
 protocol RMEpisodeDataRender {
     var name: String { get }
@@ -13,12 +14,12 @@ protocol RMEpisodeDataRender {
     var air_date: String { get }
 }
 
-final class RMCharacterEpisodeCollectionViewCellViewModel {
+final class RMEpisodeCollectionViewCellViewModel: Hashable, Equatable {
     
     private let episodeDataUrl: URL?
     private var isFetching: Bool = false
     private var dataBlock: ((RMEpisodeDataRender) -> Void)?
-    
+    public let borderColor: UIColor
     private var episode: RMEpisode? {
         didSet {
             guard let model = episode else {
@@ -29,8 +30,9 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
     }
     
     // MARK: - Init
-    init(episodeDataUrl: URL?) {
+    init(episodeDataUrl: URL?, borderColor: UIColor = .systemBlue) {
         self.episodeDataUrl = episodeDataUrl
+        self.borderColor = borderColor
     }
     
     // MARK: - Public
@@ -60,5 +62,13 @@ final class RMCharacterEpisodeCollectionViewCellViewModel {
                 print(String(describing: error))
             }
         }
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(self.episodeDataUrl?.absoluteString ?? "")
+    }
+    
+    static func == (lhs: RMEpisodeCollectionViewCellViewModel, rhs: RMEpisodeCollectionViewCellViewModel) -> Bool {
+        return lhs.hashValue == rhs.hashValue
     }
 }
