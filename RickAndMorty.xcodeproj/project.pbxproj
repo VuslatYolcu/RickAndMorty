@@ -185,7 +185,6 @@
 				11B3193D29F4608F009CCE43 /* ChacterDetail */,
 				11C7500929EDB623007FD0A9 /* RMCharacterListViewViewModel.swift */,
 				11E8E5A329EDC95E00CC6930 /* RMCharacterCollectionViewCellViewModel.swift */,
-				11AD5CDE2A016DFC006AA035 /* RMEpisodeDetailViewViewModel.swift */,
 				1112BFA22A019A8B0027D226 /* RMEpisodeListViewViewModel.swift */,
 			);
 			path = ViewModels;
@@ -246,6 +245,7 @@
 		1172C5C42A0384FA00EE0EAD /* EpisodeDetail */ = {
 			isa = PBXGroup;
 			children = (
+				11AD5CDE2A016DFC006AA035 /* RMEpisodeDetailViewViewModel.swift */,
 				1172C5C52A03851B00EE0EAD /* RMEpisodeInfoCollectionViewCellViewModel.swift */,
 			);
 			path = EpisodeDetail;
