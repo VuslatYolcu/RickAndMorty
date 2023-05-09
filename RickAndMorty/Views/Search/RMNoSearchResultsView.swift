@@ -32,7 +32,10 @@ final class RMNoSearchResultsView: UIView {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
         addSubviews(iconView, label)
+        isHidden = true
         addConstraints()
+        configure()
+        
     }
 
     required init?(coder: NSCoder) {
@@ -55,7 +58,7 @@ final class RMNoSearchResultsView: UIView {
         ])
     }
     
-    public func configure() {
+    private func configure() {
         label.text = viewModel.title
         iconView.image = viewModel.image
     }
