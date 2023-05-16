@@ -42,10 +42,8 @@ final class RMServiceViewViewModel {
     }
     
     public func executeSearch() {
-        searchText = "Rick"
-        
         // Build arguments
-        var queryParams: [URLQueryItem] = [URLQueryItem(name: "name", value: searchText)]
+        var queryParams: [URLQueryItem] = [URLQueryItem(name: "name", value: searchText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))]
         
         // Add options
         queryParams.append(contentsOf: optionMap.enumerated().compactMap({ _, element in
