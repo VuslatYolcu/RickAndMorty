@@ -12,7 +12,7 @@ import Foundation
 // - show no results view
 // - kick off API requests
 
-final class RMServiceViewViewModel {
+final class RMSearchViewViewModel {
     
     let config: RMSearchViewController.Config
     
@@ -21,6 +21,8 @@ final class RMServiceViewViewModel {
     private var optionMapUpdateBlock: (((RMSearchInputViewViewModel.DynamicOption, String)) -> Void)?
     
     private var searchResultsHandler: ((RMSearchResultsViewModel) -> Void)?
+    
+    private var noResultsHandler: (() -> Void)?
     // MARK: - Init
     
     init(config: RMSearchViewController.Config) {
@@ -28,6 +30,18 @@ final class RMServiceViewViewModel {
     }
     
     // MARK: - Public
+    
+    public func set(query text: String) {
+        self.searchText = text
+    }
+    
+    public func registerSearchResultsHandler(_ block: @escaping (RMSearchResultsViewModel) -> Void) {
+        self.searchResultsHandler = block
+    }
+    
+    public func registerNoResultsHandler(_ block: @escaping () -> Void) {
+        self.noResultsHandler = block
+    }
     
     public func set(value: String, for option: RMSearchInputViewViewModel.DynamicOption) {
         optionMap[option] = value
@@ -77,7 +91,7 @@ final class RMServiceViewViewModel {
                 // Episodes, Characters: Collection view; location: tableView
                 self?.processSearchResults(model: model)
             case .failure(let error):
-                print("Failed to get results")
+                self?.handleNoResults()
                 break
             }
         }
@@ -107,15 +121,13 @@ final class RMServiceViewViewModel {
             self.searchResultsHandler?(results)
         } else {
             // fallback error
+            handleNoResults()
         }
         
     }
     
-    public func set(query text: String) {
-        self.searchText = text
+    private func handleNoResults() {
+        noResultsHandler?()
     }
-    
-    public func registerSearchResultsHandler(_ block: @escaping (RMSearchResultsViewModel) -> Void) {
-        self.searchResultsHandler = block
-    }
+
 }

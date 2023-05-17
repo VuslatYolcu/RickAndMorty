@@ -45,12 +45,12 @@ final class RMSearchViewController: UIViewController {
     }
     
     private let searchView: RMSearchView
-    private let viewModel: RMServiceViewViewModel
+    private let viewModel: RMSearchViewViewModel
     
     // MARK: - Init
     init(config: Config) {
         
-        let viewModel = RMServiceViewViewModel(config: config)
+        let viewModel = RMSearchViewViewModel(config: config)
         self.viewModel = viewModel
         self.searchView = RMSearchView(frame: .zero, viewModel: viewModel)
         super.init(nibName: nil, bundle: nil)
