@@ -35,7 +35,6 @@ final class RMNoSearchResultsView: UIView {
         isHidden = true
         addConstraints()
         configure()
-        
     }
 
     required init?(coder: NSCoder) {

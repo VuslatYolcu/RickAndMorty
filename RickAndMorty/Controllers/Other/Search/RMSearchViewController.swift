@@ -22,6 +22,14 @@ final class RMSearchViewController: UIViewController {
             case episode // name
             case location // name | type
             
+            var endpoint: RMEndpoint {
+                switch self {
+                case .character: return .character
+                case .location: return .location
+                case .episode: return .episode
+                }
+            }
+            
             var title: String {
                 switch self {
                 case .character:
@@ -37,12 +45,12 @@ final class RMSearchViewController: UIViewController {
     }
     
     private let searchView: RMSearchView
-    private let viewModel: RMServiceViewViewModel
+    private let viewModel: RMSearchViewViewModel
     
     // MARK: - Init
     init(config: Config) {
         
-        let viewModel = RMServiceViewViewModel(config: config)
+        let viewModel = RMSearchViewViewModel(config: config)
         self.viewModel = viewModel
         self.searchView = RMSearchView(frame: .zero, viewModel: viewModel)
         super.init(nibName: nil, bundle: nil)
@@ -76,7 +84,7 @@ final class RMSearchViewController: UIViewController {
     }
     
     @objc private func didTapExecuteSearch() {
-//        viewModel.executeSearch()
+        viewModel.executeSearch()
     }
                                                     
     private func addConstraints() {
@@ -91,7 +99,23 @@ final class RMSearchViewController: UIViewController {
 
 // MARK: - RMSearchViewDelegate
 extension RMSearchViewController: RMSearchViewDelegate {
+    
+    func rmSearchView(_ searchView: RMSearchView, didSelectLocation location: RMLocation) {
+        let vc = RMLocationDetailViewController(location: location)
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     func rmSearchView(_ searchView: RMSearchView, didSelectOption option: RMSearchInputViewViewModel.DynamicOption) {
-        print("Should present option picker")
+        
+        let vc = RMSearchOptionPickerViewController(option: option) { [weak self] selection in
+            print("Did select \(selection)")
+            DispatchQueue.main.async {
+                self?.viewModel.set(value: selection, for: option)
+            }
+        }
+        vc.sheetPresentationController?.detents = [.medium()]
+        vc.sheetPresentationController?.prefersGrabberVisible = true
+        present(vc, animated: true)
     }
 }
