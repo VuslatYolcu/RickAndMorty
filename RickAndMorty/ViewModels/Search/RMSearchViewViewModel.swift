@@ -23,6 +23,8 @@ final class RMSearchViewViewModel {
     private var searchResultsHandler: ((RMSearchResultsViewModel) -> Void)?
     
     private var noResultsHandler: (() -> Void)?
+    
+    private var searchResultModel: Codable?
     // MARK: - Init
     
     init(config: RMSearchViewController.Config) {
@@ -118,6 +120,7 @@ final class RMSearchViewViewModel {
             }))
         }
         if let results = resultsVM {
+            self.searchResultModel = model
             self.searchResultsHandler?(results)
         } else {
             // fallback error
@@ -128,6 +131,14 @@ final class RMSearchViewViewModel {
     
     private func handleNoResults() {
         noResultsHandler?()
+    }
+    
+    public func locationSearchResult(at index: Int) -> RMLocation? {
+        guard let searchModel = searchResultModel as? RMGetAllLocationsResponse else {
+            return nil
+        }
+        
+        return searchModel.results[index]
     }
 
 }
