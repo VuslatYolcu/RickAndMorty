@@ -26,7 +26,7 @@ final class RMSearchInputViewViewModel {
         var choices: [String] {
             switch self {
             case .status:
-                return ["alive", "death", "unknown"]
+                return ["alive", "dead", "unknown"]
             case .gender:
                 return ["male", "female", "genderless", "unknown"]
             case .locationType:
